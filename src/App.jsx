@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+import HabitForm from "./components/HabitForm";
+import HabitProgress from "./components/HabitProgress";
+import HabitList from "./components/HabitList";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [habits, setHabits] = useState([]);
+
+  // Load habits from LocalStorage on initial render
+  useEffect(() => {
+    const savedHabits = JSON.parse(localStorage.getItem("habits")) || [];
+    setHabits(savedHabits);
+  }, []);
+
+  // Save habits to LocalStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("habits", JSON.stringify(habits));
+  }, [habits]);
+
+  const addHabit = (habit) => {
+    setHabits([...habits, habit]);
+  };
+
+  const toggleCompletion = (id) => {
+    setHabits((prevHabits) =>
+      prevHabits.map((habit) =>
+        habit.id === id ? { ...habit, completed: !habit.completed } : habit
+      )
+    );
+  };
+
+  const deleteHabit = (id) => {
+    setHabits((prevHabits) => prevHabits.filter((habit) => habit.id !== id));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <h1>Habit Tracker</h1>
+      <HabitForm addHabit={addHabit} />
+      <HabitProgress habits={habits} />
+      <HabitList
+        habits={habits}
+        toggleCompletion={toggleCompletion}
+        deleteHabit={deleteHabit}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
