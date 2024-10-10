@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useState, useEffect } from "react";
 import HabitForm from "./components/HabitForm";
-import HabitProgress from "./components/HabitProgress";
 import HabitList from "./components/HabitList";
+import HabitProgress from "./components/HabitProgress";
 
-function App() {
+const App = () => {
   const [habits, setHabits] = useState([]);
 
   // Load habits from LocalStorage on initial render
@@ -46,6 +45,6 @@ function App() {
       />
     </div>
   );
-}
+};
 
 export default App;

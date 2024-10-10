@@ -1,9 +1,17 @@
-import React from 'react'
-
-const HabitList = () => {
+const HabitList = ({ habits, toggleCompletion, deleteHabit }) => {
   return (
-    <div>HabitList</div>
-  )
-}
+    <div className="habit-list">
+      {habits.map((habit) => (
+        <div
+          key={habit.id}
+          className={`habit-item ${habit.completed ? "completed" : ""}`}
+        >
+          <span onClick={() => toggleCompletion(habit.id)}>{habit.name}</span>
+          <button onClick={() => deleteHabit(habit.id)}>Delete</button>
+        </div>
+      ))}
+    </div>
+  );
+};
 
-export default HabitList
+export default HabitList;
