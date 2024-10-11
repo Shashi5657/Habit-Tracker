@@ -6,14 +6,14 @@ import HabitProgress from "./components/HabitProgress";
 const App = () => {
   const [habits, setHabits] = useState([]);
 
-  // Load habits from LocalStorage on initial render
   useEffect(() => {
     const savedHabits = JSON.parse(localStorage.getItem("habits")) || [];
+    console.log("Loaded habits:", savedHabits);
     setHabits(savedHabits);
   }, []);
 
-  // Save habits to LocalStorage whenever they change
   useEffect(() => {
+    console.log("Saving habits to LocalStorage:", habits);
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
 
