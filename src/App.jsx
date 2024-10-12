@@ -8,12 +8,10 @@ const App = () => {
 
   useEffect(() => {
     const savedHabits = JSON.parse(localStorage.getItem("habits")) || [];
-    console.log("Loaded habits:", savedHabits);
     setHabits(savedHabits);
   }, []);
 
   useEffect(() => {
-    console.log("Saving habits to LocalStorage:", habits);
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
 
@@ -23,9 +21,34 @@ const App = () => {
 
   const toggleCompletion = (id) => {
     setHabits((prevHabits) =>
-      prevHabits.map((habit) =>
-        habit.id === id ? { ...habit, completed: !habit.completed } : habit
-      )
+      prevHabits.map((habit) => {
+        if (habit.id === id) {
+          const today = new Date().toISOString().split("T")[0];
+          let newStreak = habit.streak;
+          if (!habit.completed) {
+            if (habit.lastCompleted === today) {
+              return habit;
+            }
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split("T")[0];
+            if (habit.lastCompleted === yesterdayStr) {
+              newStreak += 1;
+            } else {
+              newStreak = 1;
+            }
+          } else {
+            newStreak = habit.streak;
+          }
+          return {
+            ...habit,
+            completed: !habit.completed,
+            lastCompleted: !habit.completed ? today : null,
+            streak: newStreak,
+          };
+        }
+        return habit;
+      })
     );
   };
 
