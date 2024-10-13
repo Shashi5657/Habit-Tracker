@@ -11,6 +11,8 @@ const HabitForm = ({ addHabit }) => {
       id: Date.now(),
       name: habitName,
       completed: false,
+      lastCompleted: null,
+      streak: 0,
     };
 
     addHabit(newHabit);
