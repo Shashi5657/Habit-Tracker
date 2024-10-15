@@ -15,6 +15,12 @@ const App = () => {
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
 
+  useEffect(() => {
+    if (Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
   const addHabit = (habit) => {
     setHabits([...habits, habit]);
   };
@@ -56,6 +62,24 @@ const App = () => {
     setHabits((prevHabits) => prevHabits.filter((habit) => habit.id !== id));
   };
 
+  const setReminder = (id) => {
+    const habit = habits.find((habit) => habit.id === id);
+    if (!habit) return;
+
+    const notificationTime = new Date();
+    notificationTime.setSeconds(notificationTime.getSeconds() + 5); // Example: 5 seconds from now
+
+    const delay = notificationTime - new Date();
+
+    setTimeout(() => {
+      if (Notification.permission === "granted") {
+        new Notification("Habit Reminder", {
+          body: `Don't forget to complete: ${habit.name}`,
+        });
+      }
+    }, delay);
+  };
+
   return (
     <div className="app">
       <h1>Habit Tracker</h1>
@@ -65,6 +89,7 @@ const App = () => {
         habits={habits}
         toggleCompletion={toggleCompletion}
         deleteHabit={deleteHabit}
+        setReminder={setReminder}
       />
     </div>
   );
