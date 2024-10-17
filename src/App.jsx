@@ -62,19 +62,30 @@ const App = () => {
     setHabits((prevHabits) => prevHabits.filter((habit) => habit.id !== id));
   };
 
-  const setReminder = (id) => {
+  const setReminder = (id, time) => {
     const habit = habits.find((habit) => habit.id === id);
-    if (!habit) return;
+    if (!habit || !time) return;
 
-    const notificationTime = new Date();
-    notificationTime.setSeconds(notificationTime.getSeconds() + 5); // Example: 5 seconds from now
+    const [hours, minutes] = time.split(":").map(Number);
+    const now = new Date();
+    const reminderTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      hours,
+      minutes
+    );
 
-    const delay = notificationTime - new Date();
+    if (reminderTime <= now) {
+      reminderTime.setDate(reminderTime.getDate() + 1); // Set for the next day
+    }
+
+    const delay = reminderTime - now;
 
     setTimeout(() => {
       if (Notification.permission === "granted") {
         new Notification("Habit Reminder", {
-          body: `Don't forget to complete: ${habit.name}`,
+          body: `Time to work on: ${habit.name}`,
         });
       }
     }, delay);

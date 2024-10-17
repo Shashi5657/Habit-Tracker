@@ -8,8 +8,17 @@ const HabitList = ({ habits, toggleCompletion, deleteHabit, setReminder }) => {
         >
           <span onClick={() => toggleCompletion(habit.id)}>{habit.name}</span>
           <span className="streak">Streak: {habit.streak}</span>
+          <span>
+            Reminder: {habit.reminderTime || "Not Set"}
+            <button
+              onClick={() =>
+                habit.reminderTime && setReminder(habit.id, habit.reminderTime)
+              }
+            >
+              Set Reminder
+            </button>
+          </span>
           <button onClick={() => deleteHabit(habit.id)}>Delete</button>
-          <button onClick={() => setReminder(habit.id)}>Set Reminder</button>
         </div>
       ))}
     </div>
